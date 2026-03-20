@@ -72,5 +72,3 @@ gehollef           O
 **Lux_Final.conll** was directly for training NER model.
 
 ---
-
-*Note: This dataset is semi-automatically generated and cleaned. Minor noise may still exist.*
