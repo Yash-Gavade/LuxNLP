@@ -1,15 +1,154 @@
-# 🇱🇺 LuxNLP
+# 🇱🇺 LuxNLP  
 
-LuxNLP focuses on improving **Luxembourgish Named Entity Recognition (NER)** and related NLP resources.  
-Because Luxembourgish is a low-resource language, our goal is to **collect, clean, and compare data** from **Wikidata** and existing NER datasets to build stronger, more complete models with an extended dataset.
+> 🧠 Low-Resource NLP Research Project  
+> 📍 Focus: Luxembourgish Named Entity Recognition (NER)  
 
-## 🧠 Project Goal
+---
 
-- Scrape and extract **Luxembourgish metadata** from [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page)  
-- Clean and filter entity data (people, places, organizations, dates)  
-- Compare with existing Luxembourgish NER datasets  
-- Fine-tune and evaluate **LuxBERT / NER-BERT** on the merged data  
-- Save and publish cleaned data and baseline results in this repository
+## 📌 Overview  
+
+**LuxNLP** is a research project focused on building Natural Language Processing (NLP) resources and models for **Luxembourgish**, a low-resource language.  
+
+The project aims to create high-quality datasets, develop NER pipelines, and explore techniques for improving performance in low-resource settings.
+
+---
+
+## 🎯 Objectives  
+
+- Build and curate Luxembourgish datasets  
+- Perform data cleaning and normalization  
+- Develop Named Entity Recognition (NER) models  
+- Handle low-resource challenges  
+- Provide reproducible NLP pipelines  
+
+---
+
+## 📂 Project Structure  
+
+```
+data/
+├── raw/        → original datasets  
+├── cleaned/    → cleaned and filtered data  
+├── processed/  → final model-ready datasets  
+
+models/         → trained / fine-tuned models  
+notebooks/      → experimentation and analysis  
+paper/          → research documentation  
+results/        → evaluation outputs and figures  
+README.md       → project documentation  
+```
+
+---
+
+## 📊 Data Pipeline  
+
+The dataset follows a multi-stage pipeline:
+
+1. **Raw Data**
+   - Collected from sources such as:
+     - LOD.lu  
+     - Leipzig Corpora  
+     - News / text sources  
+
+2. **Cleaning**
+   - Removal of noise and invalid entries  
+   - Normalization of text  
+
+3. **Processing**
+   - Conversion into structured format (e.g., CoNLL)  
+   - Entity annotation (LOC, PER, ORG, etc.)  
+
+---
+
+## 🧠 Tasks  
+
+- Named Entity Recognition (NER)  
+- Dataset creation for low-resource language  
+- Weak supervision (gazetteers, heuristics)  
+- Data augmentation and balancing  
+
+---
+
+## 🤖 Models  
+
+- Transformer-based models (e.g., XLM-RoBERTa)  
+- Fine-tuned on Luxembourgish datasets  
+- Focus on improving:
+  - Precision  
+  - Recall  
+  - F1-score  
+
+---
+
+## 📈 Results  
+
+The project evaluates model performance using:
+
+- Precision  
+- Recall  
+- F1-score  
+- Confusion Matrix  
+
+Results are available in the `results/` folder.
+
+---
+
+## ⚙️ How to Use  
+
+### Install dependencies
+```
+pip install -r requirements.txt
+```
+
+### Run pipeline (example)
+```
+python scripts/run_pipeline.py
+```
+
+---
+
+## 🔬 Research Focus  
+
+LuxNLP explores:
+
+- Low-resource language challenges  
+- Dataset-centric NLP approaches  
+- Impact of data quality on model performance  
+
+---
+
+## ⚠️ Challenges  
+
+- Limited annotated data  
+- Linguistic variability  
+- Domain diversity  
+
+---
+
+## 👤 Author  
+
+**Yash Gavade**  
+M.Sc. Natural Language Processing  
+Universität Trier  
+
+---
+
+## 📄 Related Work  
+
+This project complements research on:
+- Instruction tuning datasets  
+- Dataset-centric NLP  
+- Multilingual transformer models  
+
+---
+
+## ⭐ Acknowledgment  
+
+This project is part of ongoing academic research in NLP and low-resource language processing.
+
+---
+
+
 
 
 ## 🧑🏼‍💻 Luxembourgish NLP Papers
