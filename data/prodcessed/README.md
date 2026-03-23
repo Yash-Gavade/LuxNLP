@@ -75,7 +75,6 @@ All data is converted into **CoNLL BIO format**, where:
 * `O` → Outside entity
 
 ---
-
 ## 🏗️ Dataset Construction Process  
 
 The final dataset (**Lux_Final.conll**) is created through a combination of **data collection, extraction, annotation, and synthetic data generation** to address the low-resource nature of Luxembourgish.
@@ -85,22 +84,27 @@ The final dataset (**Lux_Final.conll**) is created through a combination of **da
 ### 🔹 1. Lexical & Knowledge-Based Extraction  
 
 - **LOD.lu** was used as a primary source of structured entity information  
-- Existing entries (e.g., names of locations, organizations, products) were extracted  
+- It was mainly used for extracting:
+  - MED (Medical)
+  - EVENT
+  - PRODUCT  
 - Example sentences from LOD were converted into CoNLL format  
 
-👉 These sources provided **high-quality entity seeds**  
+👉 These sources provided **high-quality domain-specific entity seeds**  
 
 ---
 
 ### 🔹 2. Wikidata-Based Entity Expansion  
 
 - Additional entities were extracted using **Wikidata**  
-- These were mapped to Luxembourgish contexts where possible  
-- Used to increase coverage of:
-  - ORG  
-  - LOC  
-  - PER  
-  - PRODUCT  
+- Primarily used for:
+  - PER (Person)  
+  - LOC (Location)  
+  - ORG (Organization)  
+  - DATE  
+- These were adapted to Luxembourgish context where possible  
+
+👉 This step improved **entity coverage and diversity**  
 
 ---
 
@@ -113,27 +117,29 @@ Luxembourgish text was collected from multiple sources:
 - LOD example sentences  
 - Additional curated Luxembourgish text  
 
-👉 These sentences provided **natural linguistic context**  
+👉 These sentences provided **natural linguistic context** for entity usage  
 
 ---
 
 ### 🔹 4. Gazetteer-Based Weak Supervision  
 
-- Extracted entities (from LOD + Wikidata) were used as **gazetteers**  
-- These were matched against collected sentences  
+- Entities extracted from **LOD + Wikidata** were used as **gazetteers**  
+- These gazetteers were matched against collected sentences  
 - Automatic tagging was applied where matches were found  
 
-👉 This step enabled **semi-automatic annotation**  
+👉 This enabled **semi-automatic annotation at scale**  
 
 ---
 
 ### 🔹 5. Synthetic Data Generation (IMPORTANT)  
 
-To improve entity learning and address data scarcity, **synthetic sentences were generated using templates**.
+To address data scarcity, **synthetic sentences were generated using templates**.
 
 ### How it works:
-- Sentence templates were created with **fixed structure + variable entity slots**
-- One or more placeholders were replaced with real entities from gazetteers  
+- Templates were created with **fixed sentence structure + entity placeholders**
+- Placeholders were filled using entities from:
+  - LOD (MED, EVENT, PRODUCT)  
+  - Wikidata (PER, LOC, ORG, DATE)  
 
 👉 This helps the model:
 - Learn entity patterns  
@@ -172,15 +178,14 @@ kaaft         O
 
 ### 🔹 7. Final Dataset Preparation  
 
-- All data merged into Lux_Final.conll  
-- Converted into BIO tagging format  
+- All data merged into **Lux_Final.conll**  
+- Converted into **BIO tagging format**  
 - Split into:
   - Train  
   - Dev  
   - Test  
 
 👉 Ensures:
-
 - No data leakage  
 - Balanced distribution  
 - Proper evaluation setup  
