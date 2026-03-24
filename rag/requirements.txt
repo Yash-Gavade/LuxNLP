@@ -1,0 +1,9 @@
+gradio
+groq
+numpy
+scikit-learn
+transformers
+torch
+safetensors
+sentencepiece
+huggingface_hub
