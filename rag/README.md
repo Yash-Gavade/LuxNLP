@@ -208,6 +208,215 @@ Each memory entry contains:
 * Enables adaptive behavior
 * Supports incremental learning (retrieval-level)
 
+
+## RAG Pipeline
+
+User Input
+   ↓
+Preprocessing
+   ↓
+NER (XLM-R)
+   ↓
+Entity Extraction
+   ↓
+Retrieval Query Construction
+   ↓
+Retrieve Top-k Contexts
+   ↓
+Context Formatting
+   ↓
+LLM Generation (if available)
+   ↓
+Final Output
+   ↓
+Memory Update (Dynamic RAG)
+
+### ⚙️ Step-by-Step Working
+#### 1. User Input
+
+The pipeline starts when the user enters a Luxembourgish sentence.
+
+Example:
+
+Den Jean huet Paracetamol zu Esch kaf.
+
+This is raw, unstructured input.
+
+####  2. Preprocessing
+
+Before passing to models:
+
+normalize text
+tokenize (or prepare for tokenizer)
+handle punctuation / casing
+
+👉 This ensures consistency for both:
+
+NER model
+retrieval module
+####  3. NER (XLM-R)
+
+The input is passed to your trained model:
+
+👉 https://huggingface.co/YashGavade10/luxnlp-xlmr-ner
+
+Output (BIO format):
+Token	Label
+Jean	B-PER
+Paracetamol	B-MED
+Esch	B-LOC
+####  4. Entity Extraction
+
+BIO tags are converted into structured entities:
+
+PER → Jean
+MED → Paracetamol
+LOC → Esch
+
+👉 This step is very important
+Because:
+
+Retrieval becomes entity-aware, not just text-based
+
+####  5. Retrieval Query Construction
+
+Now the system builds a retrieval query using:
+
+original sentence
+extracted entities
+token structure
+BIO pattern
+
+👉 Example query representation:
+
+Sentence: "Jean Paracetamol Esch"
+Entities: [PER, MED, LOC]
+####  6. Retrieval (Static + Dynamic)
+
+The system searches:
+
+base dataset (Lux_Final.conll)
+memory dataset (dynamic)
+
+👉 https://huggingface.co/datasets/YashGavade10/luxnlp-rag-memory
+
+Retrieval returns:
+similar sentences
+BIO annotations
+source (approved or memory)
+Example retrieved result:
+De Jean schafft zu Lëtzebuerg.
+De Patient huet Paracetamol géint d’Féiwer geholl.
+####  7. Context Construction
+
+Retrieved examples are formatted into a prompt.
+
+Example prompt:
+Input:
+Den Jean huet Paracetamol zu Esch kaf.
+
+Examples:
+1. De Jean schafft zu Lëtzebuerg. [PER, LOC]
+2. De Patient huet Paracetamol geholl. [MED]
+
+Task:
+Identify entities and explain.
+
+👉 This makes the LLM grounded.
+
+####  8. LLM Generation
+
+If LLM is active (from your Space):
+
+✔ uses context + query
+✔ generates response
+
+From your debug:
+
+LLM: llama-3.1-8b-instant
+Provider: Groq
+Two cases:
+✅ Case 1: LLM available
+context → LLM → natural output
+❌ Case 2: LLM not available
+fallback:
+NER output
+retrieved examples
+
+👉 This is very important design choice
+
+####  9. Final Output
+
+The system returns:
+
+NER labels
+retrieved examples
+generated explanation (if LLM active)
+🧠 MEMORY FLOW (DETAILED)
+
+Now let’s go deeper into your memory flow (this is your strongest part).
+
+####  🔁 Memory Flow Diagram
+New Input
+   ↓
+NER Output
+   ↓
+Structured Example Creation
+   ↓
+Validation / Filtering
+   ↓
+Store in Memory Dataset
+   ↓
+Future Retrieval Uses It
+
+#### ⚙️ Step-by-Step Memory Logic
+####  1. New Input
+
+User enters a sentence.
+
+#### 2. NER Output
+
+System generates BIO tags.
+
+####  3. Structured Example Creation
+
+The system converts prediction into dataset format:
+
+{
+  "tokens": ["Den", "Jean", "huet", "Paracetamol"],
+  "tags": ["O", "B-PER", "O", "B-MED"],
+  "text": "Den Jean huet Paracetamol",
+  "source": "memory"
+}
+#### 4. Validation (IMPORTANT)
+
+Before storing:
+
+check duplicates
+check quality
+optional filtering
+
+👉 This prevents noise in memory
+
+#### 5. Store in Dataset
+
+Stored in:
+
+👉 https://huggingface.co/datasets/YashGavade10/luxnlp-rag-memory
+
+Now dataset contains:
+
+source	meaning
+approved	original curated data
+memory	dynamically added
+#### 6. Future Retrieval
+
+Next time:
+
+👉 retrieval includes memory entries
+
+So system improves without retraining
+
 ---
 
 ⚠️ Important:
