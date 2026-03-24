@@ -1,136 +1,395 @@
----
-title: LuxNLP RAG 
-emoji: 🚀
-colorFrom: indigo
-colorTo: blue
-sdk: gradio
-app_file: app.py
-pinned: false
-sdk_version: 6.9.0
----
-# 🇱🇺 LuxNLP – Luxembourgish NER + Retrieval-Augmented Generation (RAG)
+# 🚀 LuxNLP RAG Module
 
-> 🧠 Low-Resource NLP System for Luxembourgish  
-> 🔍 Entity-Aware Retrieval + Contextual Generation  
-> 🚀 Interactive Hugging Face Space  
+### 🇱🇺 Retrieval-Augmented Generation for Luxembourgish NLP
 
 ---
 
-## 📌 Overview  
+## 🔗 Project Components
 
-LuxNLP is a hybrid NLP system combining Named Entity Recognition (NER) with a Retrieval-Augmented Generation (RAG) pipeline to improve understanding and response generation for Luxembourgish.
+* 🖥️ **App (Hugging Face Space)**
+  https://huggingface.co/spaces/YashGavade10/Lux_Nlp
 
-Designed for low-resource settings, it leverages custom datasets, weak supervision, and entity-guided retrieval.
+* 🤖 **NER Model (XLM-R)**
+  https://huggingface.co/YashGavade10/luxnlp-xlmr-ner
 
----
-
-## 🧠 System Architecture  
-
-Input → Tokenization → NER (XLM-R) → Entity Extraction → Retrieval → Context Injection → Generation  
-
----
-
-## 🔍 Core Components  
-
-### 1. Named Entity Recognition (NER)
-- Model: XLM-RoBERTa  
-- BIO tagging (B/I/O)  
-- Entities: PER, LOC, ORG, DATE, PRODUCT, EVENT, MED  
+* 📊 **Dynamic Memory Dataset**
+  https://huggingface.co/datasets/YashGavade10/luxnlp-rag-memory
 
 ---
 
-### 2. Dataset (Lux_Final.conll)
-Built using:
-- LOD.lu → MED, EVENT, PRODUCT  
-- Wikidata → PER, LOC, ORG, DATE  
-- RTL + Leipzig → real text  
-- Gazetteers → weak supervision  
-- Synthetic templates → augmentation  
+# 🧠 1. Overview
+
+The **LuxNLP RAG module** implements a hybrid pipeline that combines:
+
+* Named Entity Recognition (NER)
+* Retrieval over BIO-annotated datasets
+* Dynamic memory storage
+* Context-aware LLM generation
+
+This system is designed for **low-resource Luxembourgish NLP**, where traditional large-scale datasets and models are limited.
+
+Instead of relying purely on neural generation, the system introduces **retrieval-based grounding** to improve reliability, interpretability, and performance.
 
 ---
 
-### 3. Retrieval Module  
-- Uses extracted entities as query signals  
-- Matches against dataset/text corpus  
-- Retrieves relevant context  
+# 🎯 2. Core Idea
+
+The key principle of this system is:
+
+> **Use structured entity extraction to guide retrieval, and use retrieval to guide generation.**
+
+This creates a pipeline where:
+
+* NER extracts structured meaning
+* Retrieval provides contextual evidence
+* LLM generates grounded responses
 
 ---
 
-### 4. Dynamic RAG Pipeline  
+# ⚙️ 3. High-Level Pipeline
 
-User Query  
-↓  
-NER → Entities  
-↓  
-Retrieve Context  
-↓  
-Inject into Prompt  
-↓  
-Generate Response  
-
----
-
-### 5. Generation  
-- Combines query + retrieved context  
-- Produces grounded responses  
-
----
-
-## 📂 Files  
-
-- app.py → UI  
-- dynamic_rag_luxnlp.py → RAG logic  
-- Lux_Final.conll → dataset  
-- metrics.json → evaluation  
-- requirements.txt → dependencies  
+```text
+User Input
+   ↓
+NER (XLM-R)
+   ↓
+Entity Extraction
+   ↓
+Retrieval (Static + Dynamic)
+   ↓
+Context Construction
+   ↓
+LLM Generation (optional)
+   ↓
+Output + Memory Update
+```
 
 ---
 
-## ⚙️ Workflow  
-
-1. Input processing  
-2. NER inference  
-3. Entity extraction  
-4. Retrieval  
-5. Context construction  
-6. Response generation  
+# 🧩 4. System Components
 
 ---
 
-## 📊 Evaluation  
+## 4.1 NER Layer (XLM-R)
 
-Metrics:
-- Precision  
-- Recall  
-- F1-score  
+The system uses a fine-tuned **XLM-RoBERTa model** for Luxembourgish NER.
 
-See metrics.json  
+### Responsibilities:
 
----
+* Tokenization
+* BIO tagging
+* Entity span detection
 
-## 🚀 Why NER + RAG?  
+### Supported Entities:
 
-- Improves context understanding  
-- Reduces hallucination  
-- Enhances entity grounding  
+* PER (Person)
+* LOC (Location)
+* ORG (Organization)
+* DATE
+* EVENT
+* MED
+* PRODUCT
 
----
-
-## ⚠️ Limitations  
-
-- Low-resource constraints  
-- Limited dataset  
-- Lightweight retrieval  
+👉 This transforms raw text into structured semantic information.
 
 ---
 
-## 👤 Author  
+## 4.2 Retrieval Layer
 
-Yash Gavade  
-M.Sc. NLP – Universität Trier  
+The retrieval module searches for similar examples in a BIO-tagged corpus.
+
+### Retrieval Inputs:
+
+* Original sentence
+* Extracted entities
+* Token patterns
+
+### Retrieval Outputs:
+
+* Similar sentences
+* BIO labels
+* Source metadata
 
 ---
 
-## 🌟 Demo  
+### Types of Retrieval
 
-Use this Hugging Face Space to test Luxembourgish NER + RAG system
+#### 🔹 Static Retrieval
+
+* Uses fixed dataset (`Lux_Final.conll`)
+* No updates over time
+
+#### 🔹 Dynamic Retrieval
+
+* Uses memory dataset
+* Includes newly stored examples
+* Expands retrieval knowledge base
+
+---
+
+## 4.3 Context Construction
+
+Retrieved examples are transformed into structured prompts.
+
+### Context Includes:
+
+* BIO-tagged examples
+* Similar entity patterns
+* Previous memory entries
+
+👉 This step ensures the LLM receives **grounded input**, not raw queries.
+
+---
+
+## 4.4 Generation Layer (LLM)
+
+An external LLM is optionally used to generate final responses.
+
+### Behavior:
+
+#### If LLM is available:
+
+* Context + query → LLM → response
+
+#### If LLM is NOT available:
+
+* System falls back to:
+
+  * NER output
+  * retrieved examples
+
+---
+
+### Why LLM is optional:
+
+* Ensures system works offline
+* Maintains robustness
+* Avoids dependency on API availability
+
+---
+
+# 🧠 5. Dynamic Memory (Key Innovation)
+
+Dynamic memory allows the system to **store and reuse new examples**.
+
+---
+
+## Memory Flow
+
+```text
+New Input
+   ↓
+NER Output
+   ↓
+Create Structured Example
+   ↓
+Store in Memory Dataset
+   ↓
+Future Retrieval Uses It
+```
+
+---
+
+## Dataset Structure
+
+Each memory entry contains:
+
+* tokens
+* BIO tags
+* full sentence
+* source (`approved` or `memory`)
+
+---
+
+## Why Dynamic Memory Matters
+
+* Expands dataset without retraining
+* Improves retrieval quality over time
+* Enables adaptive behavior
+* Supports incremental learning (retrieval-level)
+
+---
+
+⚠️ Important:
+
+This is **not weight-based learning**.
+The model does not update its parameters.
+
+Instead:
+
+> Learning happens through **memory expansion and retrieval improvement**.
+
+---
+
+# 🔗 6. System Integration
+
+---
+
+## 6.1 Space → Model
+
+The Hugging Face Space:
+
+* sends input to XLM-R model
+* receives BIO predictions
+
+---
+
+## 6.2 Space → Dataset
+
+The Space:
+
+* retrieves context from dataset
+* loads memory examples
+* displays retrieved results
+
+---
+
+## 6.3 Space → LLM
+
+The Space:
+
+* sends prompt to LLM
+* receives generated output
+
+---
+
+## 6.4 Memory → Dataset
+
+Dynamic RAG:
+
+* adds new examples
+* updates dataset
+* enables future reuse
+
+---
+
+# 📊 7. Evaluation
+
+Stored in:
+
+```text
+metrics/metrics.json
+```
+
+### Metrics:
+
+* Precision
+* Recall
+* F1-score
+
+---
+
+## Evaluation Scope:
+
+* NER performance
+* Retrieval quality
+* RAG effectiveness
+
+---
+
+# 🧪 8. Application Features
+
+The Hugging Face Space includes:
+
+* Static RAG
+* Dynamic RAG
+* XLM-R prediction
+* Model comparison
+* Metrics visualization
+* Case studies
+* LLM debugging
+
+---
+
+# 📂 9. Folder Structure
+
+```text
+rag/
+├── app/
+│   └── app.py
+│
+├── core/
+│   └── rag_pipeline.py
+│
+├── data/
+│   └── Lux_Final.conll
+│
+├── memory/
+│   └── rag_memory.jsonl
+│
+├── metrics/
+│   └── metrics.json
+│
+├── README.md
+└── requirements.txt
+```
+
+---
+
+# ⚡ 10. Why This Approach Works
+
+Traditional approaches:
+
+| Method         | Limitation                  |
+| -------------- | --------------------------- |
+| NER only       | No contextual understanding |
+| LLM only       | Hallucination risk          |
+| Retrieval only | No generation               |
+
+---
+
+## LuxNLP Solution
+
+| Component | Role                     |
+| --------- | ------------------------ |
+| NER       | Structured understanding |
+| Retrieval | Evidence grounding       |
+| Memory    | Adaptive knowledge       |
+| LLM       | Fluent generation        |
+
+---
+
+# ⚠️ 11. Limitations
+
+* Limited Luxembourgish data
+* Small retrieval corpus
+* Basic retrieval (can improve with embeddings)
+* Memory quality depends on inputs
+* No automatic retraining loop
+
+---
+
+# 🚀 12. Future Work
+
+* Dense vector retrieval (FAISS, embeddings)
+* Better ranking using entity similarity
+* Automated memory validation
+* Continuous retraining loop
+* Explainable retrieval
+
+---
+
+# 👤 13. Author
+
+**Yash Gavade**
+M.Sc. NLP
+Universität Trier
+
+---
+
+# 🧠 14. Final Summary
+
+LuxNLP RAG is a **hybrid NLP system** that connects:
+
+* Transformer-based NER
+* Retrieval over structured datasets
+* Dynamic memory expansion
+* Optional LLM-based generation
+
+👉 In simple terms:
+
+> **NER finds entities → retrieval finds evidence → memory stores knowledge → LLM generates grounded output**
+
+---
+
+This makes LuxNLP a **robust, explainable, and adaptive RAG system for low-resource languages**.
