@@ -1,0 +1,9 @@
+Gold: survey.conll
+Pred: output/predictions/xlmr_survey_predictions_.conll
+
+Precision: 0.3607
+Recall:    0.1376
+F1 Score:  0.1992
+
+Tag Distribution (Pred):
+Counter({'O': 6588, 'B-MED': 186, 'B-PRODUCT': 22, 'I-PER': 5, 'B-PER': 5, 'I-PRODUCT': 1})

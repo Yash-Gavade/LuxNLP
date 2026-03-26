@@ -1,0 +1,9 @@
+Gold: survey.conll
+Pred: output/predictions/groq_rag_survey_predictions.conll
+
+Precision: 0.0769
+Recall:    0.0035
+F1 Score:  0.0067
+
+Tag Distribution (Pred):
+Counter({'O': 6781, 'B-PRODUCT': 7, 'B-MEDICINE': 6, 'B-MED': 5, 'B-PER': 4, 'B-ORG': 1, 'B-MISC': 1, 'S': 1, 'LIE': 1})

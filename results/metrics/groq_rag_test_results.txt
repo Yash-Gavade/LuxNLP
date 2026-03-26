@@ -1,0 +1,9 @@
+Gold: Model_data/test.conll
+Pred: output/predictions/groq_rag_test_predictions.conll
+
+Precision: 0.2332
+Recall:    0.6104
+F1 Score:  0.3375
+
+Tag Distribution (Pred):
+Counter({'O': 19358, 'B-LOC': 5120, 'B-PER': 4771, 'B-ORG': 3396, 'B-PRODUCT': 1691, 'I-LOC': 1453, 'I-DATE': 1191, 'B-MED': 1050, 'I-PER': 816, 'B-DATE': 807, 'I-ORG': 797, 'B-EVENT': 720, 'I-EVENT': 249, 'I-PRODUCT': 97, 'I-MED': 16})

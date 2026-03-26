@@ -1,0 +1,9 @@
+Gold: Model_data/test.conll
+Pred: output/predictions/test_predictions.conll
+
+Precision: 0.8735
+Recall:    0.7756
+F1 Score:  0.8216
+
+Tag Distribution (Pred):
+Counter({'O': 34009, 'I-DATE': 1256, 'B-LOC': 1201, 'I-PER': 842, 'B-PER': 690, 'B-DATE': 645, 'B-MED': 624, 'I-ORG': 518, 'I-EVENT': 421, 'B-EVENT': 406, 'B-ORG': 378, 'B-PRODUCT': 277, 'I-LOC': 242, 'I-PRODUCT': 23})
