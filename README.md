@@ -160,7 +160,8 @@ rag/
 
 ## 📎 Repository
 
-https://github.com/Yash-Gavade/LuxNLP
+* 📎 Github **
+* https://github.com/Yash-Gavade/LuxNLP
 
 ## 🔗 Hugging Face
 
@@ -177,7 +178,7 @@ https://github.com/Yash-Gavade/LuxNLP
 
 ---
 
-## 👨‍💻 Authors
+## 👨‍💻 Author
 
 - Yash Gavade 
 
