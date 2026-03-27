@@ -13,7 +13,9 @@ The trained XLM-R model is not included in this repository due to size limitatio
 
 The trained model can be:
 
-* Shared via Google Drive / Hugging Face 
+* Shared via Google Drive & Hugging Face
+* Google Drive : https://drive.google.com/drive/folders/1thHqVy1gYxhg3JmmcSKk4LLO7EPwq_rK?usp=drive_link
+  Hugging Face link : https://huggingface.co/YashGavade10/luxnlp-xlmr-ner
 * Reproduced using scripts in the `scripts/` folder
 
 ## 🚀 Reproduction
